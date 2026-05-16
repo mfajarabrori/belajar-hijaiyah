@@ -2,10 +2,9 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Belajar Hijaiyah - No Scroll</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Belajar Hijaiyah - Fix Layout</title>
     <style>
-        /* Memasukkan Font LPMQ Isep Misbah */
         @font-face {
             font-family: 'LPMQIsepMisbah';
             src: url('LPMQ Isep Misbah.ttf') format('truetype');
@@ -20,45 +19,45 @@
         }
 
         body {
-            background-color: #f0f2f5;
+            background-color: #1b5e20;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            overflow: hidden; /* Mencegah scroll di body */
+            overflow: hidden;
+            /* Support for notch and navigation bar */
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
         }
 
         .phone-container {
             width: 100%;
             max-width: 412px;
-            height: 100vh;
+            height: 100%;
             background-color: #ffffff;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            position: relative;
         }
 
-        /* Grid Hijaiyah dibuat lebih padat agar tidak memakan tempat */
         .huruf-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             gap: 2px;
             padding: 8px;
             background: #1b5e20;
-            flex-shrink: 0; /* Ukuran tetap, tidak menciut */
+            flex-shrink: 0;
         }
 
         .btn-huruf {
             background: rgba(255, 255, 255, 0.1);
             color: white;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 4px 0;
+            padding: 6px 0;
             border-radius: 6px;
             font-family: 'LPMQIsepMisbah', serif;
             font-size: 1.1rem;
             cursor: pointer;
             text-align: center;
-            transition: 0.2s;
         }
 
         .btn-huruf.active {
@@ -67,7 +66,6 @@
             border-color: white;
         }
 
-        /* Tombol Harakat */
         .harakat-pills {
             display: flex;
             justify-content: center;
@@ -86,7 +84,7 @@
             font-size: 0.9rem;
             font-family: 'LPMQIsepMisbah', serif;
             cursor: pointer;
-            flex: 1; /* Ukuran tombol harakat bagi rata */
+            flex: 1;
             max-width: 50px;
             text-align: center;
         }
@@ -100,7 +98,6 @@
         .progress-container { width: 100%; height: 4px; background-color: #eee; flex-shrink: 0; }
         .progress-bar { height: 100%; background-color: #81c784; width: 0%; transition: 0.3s; }
 
-        /* Area kartu menggunakan flex-grow untuk mengisi sisa ruang */
         .content {
             flex-grow: 1;
             display: flex;
@@ -108,13 +105,13 @@
             align-items: center;
             background: #fafafa;
             padding: 10px;
-            min-height: 0; /* Penting agar flex child bisa menciut */
+            min-height: 0;
         }
 
         .card {
             width: 100%;
             height: 100%;
-            max-height: 320px; /* Batas maksimal agar tidak terlalu lonjong */
+            max-height: 350px;
             aspect-ratio: 1 / 1;
             background: white;
             border-radius: 24px;
@@ -124,39 +121,45 @@
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            user-select: none;
         }
 
         .arabic-text {
             font-family: 'LPMQIsepMisbah', serif;
-            font-size: clamp(5rem, 25vh, 10rem); /* Ukuran font adaptif */
+            font-size: clamp(6rem, 30vh, 12rem);
             color: #1b5e20;
             line-height: 1;
             direction: rtl;
         }
 
         .navigation {
-            padding: 12px 15px;
+            padding: 15px 20px 25px 20px; /* Padding bawah dipertebal agar tidak kena tombol navigasi Android */
             display: flex;
             justify-content: space-between;
-            gap: 10px;
+            gap: 20px;
             background: white;
             flex-shrink: 0;
+            border-top: 1px solid #eee;
         }
 
         button.nav-btn {
             flex: 1;
-            padding: 14px;
+            padding: 15px;
             border: none;
-            border-radius: 12px;
-            font-size: 1rem;
+            border-radius: 50px; /* Tombol bulat/oval */
+            font-size: 1.5rem;
             font-weight: bold;
             cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: 0.2s;
         }
 
-        .btn-prev { background-color: #e0e0e0; color: #424242; }
-        .btn-next { background-color: #4caf50; color: white; }
-        button:disabled { opacity: 0.3; }
+        .btn-prev { background-color: #f5f5f5; color: #1b5e20; border: 2px solid #1b5e20; }
+        .btn-next { background-color: #1b5e20; color: white; }
+        button:disabled { opacity: 0.2; cursor: not-allowed; }
+        
+        .arrow { font-size: 1.8rem; font-weight: 900; }
     </style>
 </head>
 <body>
@@ -185,13 +188,17 @@
         </div>
 
         <div class="navigation">
-            <button class="nav-btn btn-prev" id="btnPrev" onclick="prevStep()">Kembali</button>
-            <button class="nav-btn btn-next" id="btnNext" onclick="nextStep()">Lanjut</button>
+            <button class="nav-btn btn-prev" id="btnPrev" onclick="prevStep()">
+                <span class="arrow">←</span>
+            </button>
+            <button class="nav-btn btn-next" id="btnNext" onclick="nextStep()">
+                <span class="arrow">→</span>
+            </button>
         </div>
     </div>
 
     <script>
-        const hurufDasar = ["أ", "ب", "ت", "ث", "ج", "ح", "خ", "د", "ذ", "ر", "ز", "س", "ش", "ص", "ض", "ط", "ظ", "ع", "غ", "ف", "ق", "ك", "ل", "m", "ن", "و", "هـ", "ي"];
+        const hurufDasar = ["أ", "ب", "ت", "ث", "ج", "ح", "خ", "د", "ذ", "ر", "ز", "س", "ش", "ص", "ض", "ط", "ظ", "ع", "غ", "ف", "ق", "ك", "ل", "م", "ن", "و", "هـ", "ي"];
         let dataBelajar = [];
 
         hurufDasar.forEach((h) => {
@@ -233,7 +240,6 @@
             progressBar.style.width = ((currentIndex % 7) + 1) / 7 * 100 + "%";
 
             document.getElementById('btnPrev').disabled = currentIndex === 0;
-            document.getElementById('btnNext').innerText = currentIndex === dataBelajar.length - 1 ? "Ulangi" : "Lanjut";
         }
 
         function nextStep() {
