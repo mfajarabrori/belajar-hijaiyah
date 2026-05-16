@@ -3,7 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Belajar Hijaiyah - Final Logic</title>
+    <title>Belajar Hijaiyah</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#1b5e20">
+
     <style>
         @font-face {
             font-family: 'LPMQIsepMisbah';
@@ -156,7 +162,6 @@
         .btn-prev { background-color: #1b5e20; color: white; }
         .btn-next { background-color: #1b5e20; color: white; }
         
-        /* Gaya tombol saat disable */
         button:disabled { 
             opacity: 0.15; 
             cursor: not-allowed;
@@ -225,26 +230,15 @@
 
         function updateUI() {
             arabicEl.innerText = dataBelajar[currentIndex];
-            
-            // Highlight Hijaiyah
             const currentHurufIdx = Math.floor(currentIndex / 7);
             document.querySelectorAll('.btn-huruf').forEach((btn, idx) => {
                 btn.classList.toggle('active', idx === currentHurufIdx);
             });
-
-            // Highlight Harakat
             pills.forEach((pill, idx) => {
                 pill.classList.toggle('active', idx === (currentIndex % 7));
             });
-
-            // Progress Bar
             progressBar.style.width = ((currentIndex % 7) + 1) / 7 * 100 + "%";
-
-            // LOGIKA DISABLE TOMBOL
-            // Matikan tombol Kiri jika di huruf pertama (Alif) & harakat pertama (a)
             btnPrev.disabled = (currentIndex === 0);
-            
-            // Matikan tombol Kanan jika di huruf terakhir (Ya) & harakat terakhir (aina)
             btnNext.disabled = (currentIndex === dataBelajar.length - 1);
         }
 
