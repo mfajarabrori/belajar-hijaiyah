@@ -2,8 +2,8 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Belajar Hijaiyah - LPMQ Font</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Belajar Hijaiyah - No Scroll</title>
     <style>
         /* Memasukkan Font LPMQ Isep Misbah */
         @font-face {
@@ -16,6 +16,7 @@
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -23,41 +24,38 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            height: 100vh;
+            overflow: hidden; /* Mencegah scroll di body */
         }
 
         .phone-container {
             width: 100%;
             max-width: 412px;
             height: 100vh;
-            max-height: 846px;
             background-color: #ffffff;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
         }
 
-        /* Container Tombol Huruf (Grid) */
+        /* Grid Hijaiyah dibuat lebih padat agar tidak memakan tempat */
         .huruf-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 4px;
-            padding: 10px;
+            gap: 2px;
+            padding: 8px;
             background: #1b5e20;
-            max-height: 180px;
-            overflow-y: auto;
-            border-bottom: 2px solid #2e7d32;
+            flex-shrink: 0; /* Ukuran tetap, tidak menciut */
         }
 
         .btn-huruf {
             background: rgba(255, 255, 255, 0.1);
             color: white;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 8px 0;
-            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 4px 0;
+            border-radius: 6px;
             font-family: 'LPMQIsepMisbah', serif;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             cursor: pointer;
             text-align: center;
             transition: 0.2s;
@@ -66,31 +64,31 @@
         .btn-huruf.active {
             background: #81c784;
             color: #1b5e20;
-            font-weight: bold;
             border-color: white;
         }
 
-        /* Container Tombol Harakat */
+        /* Tombol Harakat */
         .harakat-pills {
             display: flex;
             justify-content: center;
-            gap: 6px;
-            padding: 10px;
+            gap: 4px;
+            padding: 8px;
             background: linear-gradient(135deg, #1b5e20, #2e7d32);
+            flex-shrink: 0;
         }
 
         .pill {
             background: rgba(255, 255, 255, 0.2);
             color: white;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            padding: 6px 8px;
-            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 4px 0;
+            border-radius: 8px;
             font-size: 0.9rem;
             font-family: 'LPMQIsepMisbah', serif;
             cursor: pointer;
-            min-width: 40px;
+            flex: 1; /* Ukuran tombol harakat bagi rata */
+            max-width: 50px;
             text-align: center;
-            transition: 0.2s;
         }
 
         .pill.active {
@@ -99,56 +97,58 @@
             font-weight: bold;
         }
 
-        .progress-container { width: 100%; height: 6px; background-color: #eee; }
+        .progress-container { width: 100%; height: 4px; background-color: #eee; flex-shrink: 0; }
         .progress-bar { height: 100%; background-color: #81c784; width: 0%; transition: 0.3s; }
 
+        /* Area kartu menggunakan flex-grow untuk mengisi sisa ruang */
         .content {
-            flex: 1;
+            flex-grow: 1;
             display: flex;
             justify-content: center;
             align-items: center;
             background: #fafafa;
+            padding: 10px;
+            min-height: 0; /* Penting agar flex child bisa menciut */
         }
 
         .card {
-            width: 80%;
+            width: 100%;
+            height: 100%;
+            max-height: 320px; /* Batas maksimal agar tidak terlalu lonjong */
             aspect-ratio: 1 / 1;
             background: white;
-            border-radius: 30px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            border-radius: 24px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
             border: 1px solid #eee;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            transition: transform 0.1s;
             user-select: none;
         }
 
-        .card:active { transform: scale(0.95); }
-
         .arabic-text {
             font-family: 'LPMQIsepMisbah', serif;
-            font-size: 11rem;
+            font-size: clamp(5rem, 25vh, 10rem); /* Ukuran font adaptif */
             color: #1b5e20;
             line-height: 1;
-            padding-bottom: 20px;
             direction: rtl;
         }
 
         .navigation {
-            padding: 15px;
+            padding: 12px 15px;
             display: flex;
             justify-content: space-between;
-            gap: 15px;
+            gap: 10px;
             background: white;
+            flex-shrink: 0;
         }
 
         button.nav-btn {
             flex: 1;
-            padding: 16px;
+            padding: 14px;
             border: none;
-            border-radius: 15px;
+            border-radius: 12px;
             font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
@@ -191,7 +191,7 @@
     </div>
 
     <script>
-        const hurufDasar = ["أ", "ب", "ت", "ث", "ج", "ح", "خ", "د", "ذ", "ر", "ز", "س", "ش", "ص", "ض", "ط", "ظ", "ع", "غ", "ف", "ق", "ك", "ل", "م", "ن", "و", "هـ", "ي"];
+        const hurufDasar = ["أ", "ب", "ت", "ث", "ج", "ح", "خ", "د", "ذ", "ر", "ز", "س", "ش", "ص", "ض", "ط", "ظ", "ع", "غ", "ف", "ق", "ك", "ل", "m", "ن", "و", "هـ", "ي"];
         let dataBelajar = [];
 
         hurufDasar.forEach((h) => {
@@ -208,7 +208,6 @@
         const pills = document.querySelectorAll('.pill');
         const hurufGrid = document.getElementById('hurufGrid');
 
-        // Render tombol hijaiyah ke grid
         hurufDasar.forEach((h, i) => {
             const btn = document.createElement('div');
             btn.className = 'btn-huruf';
@@ -220,23 +219,18 @@
         function updateUI() {
             arabicEl.innerText = dataBelajar[currentIndex];
             
-            // Highlight tombol Hijaiyah aktif
             const currentHurufIdx = Math.floor(currentIndex / 7);
             const allBtnHuruf = document.querySelectorAll('.btn-huruf');
             allBtnHuruf.forEach((btn, idx) => {
-                if(idx === currentHurufIdx) btn.classList.add('active');
-                else btn.classList.remove('active');
+                btn.classList.toggle('active', idx === currentHurufIdx);
             });
 
-            // Highlight tombol harakat aktif
             const currentHarakatIndex = currentIndex % 7;
             pills.forEach((pill, idx) => {
-                if (idx === currentHarakatIndex) pill.classList.add('active');
-                else pill.classList.remove('active');
+                pill.classList.toggle('active', idx === currentHarakatIndex);
             });
 
-            let step = (currentIndex % 7) + 1;
-            progressBar.style.width = (step / 7) * 100 + "%";
+            progressBar.style.width = ((currentIndex % 7) + 1) / 7 * 100 + "%";
 
             document.getElementById('btnPrev').disabled = currentIndex === 0;
             document.getElementById('btnNext').innerText = currentIndex === dataBelajar.length - 1 ? "Ulangi" : "Lanjut";
@@ -248,8 +242,10 @@
         }
 
         function prevStep() {
-            if (currentIndex > 0) currentIndex--;
-            updateUI();
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateUI();
+            }
         }
 
         function jumpToHuruf(hurufIndex) {
@@ -258,8 +254,7 @@
         }
 
         function jumpToHarakat(harakatIndex) {
-            const currentHurufStart = Math.floor(currentIndex / 7) * 7;
-            currentIndex = currentHurufStart + harakatIndex;
+            currentIndex = (Math.floor(currentIndex / 7) * 7) + harakatIndex;
             updateUI();
         }
 
