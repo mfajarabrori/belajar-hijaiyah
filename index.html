@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Belajar Hijaiyah - Fix Layout</title>
+    <title>Belajar Hijaiyah - Layout Fix</title>
     <style>
         @font-face {
             font-family: 'LPMQIsepMisbah';
-            src: url('LPMQ Isep Misbah.ttf') format('truetype');
+            src: url('LPMQ IsepMisbah.ttf') format('truetype');
         }
 
         * {
@@ -25,8 +25,7 @@
             align-items: center;
             height: 100vh;
             overflow: hidden;
-            /* Support for notch and navigation bar */
-            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+            padding-bottom: env(safe-area-inset-bottom);
         }
 
         .phone-container {
@@ -36,14 +35,14 @@
             background-color: #ffffff;
             display: flex;
             flex-direction: column;
-            position: relative;
         }
 
+        /* 1. Header Grid Hijaiyah - Dibuat lebih ringkas */
         .huruf-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             gap: 2px;
-            padding: 8px;
+            padding: 4px;
             background: #1b5e20;
             flex-shrink: 0;
         }
@@ -52,10 +51,10 @@
             background: rgba(255, 255, 255, 0.1);
             color: white;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 6px 0;
-            border-radius: 6px;
+            padding: 4px 0;
+            border-radius: 4px;
             font-family: 'LPMQIsepMisbah', serif;
-            font-size: 1.1rem;
+            font-size: 0.9rem;
             cursor: pointer;
             text-align: center;
         }
@@ -63,9 +62,10 @@
         .btn-huruf.active {
             background: #81c784;
             color: #1b5e20;
-            border-color: white;
+            font-weight: bold;
         }
 
+        /* 2. Tombol Harakat */
         .harakat-pills {
             display: flex;
             justify-content: center;
@@ -73,19 +73,19 @@
             padding: 8px;
             background: linear-gradient(135deg, #1b5e20, #2e7d32);
             flex-shrink: 0;
+            z-index: 10; /* Biar tetap di atas kalau ada teks lewat */
         }
 
         .pill {
             background: rgba(255, 255, 255, 0.2);
             color: white;
             border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 4px 0;
+            padding: 6px 0;
             border-radius: 8px;
             font-size: 0.9rem;
             font-family: 'LPMQIsepMisbah', serif;
-            cursor: pointer;
             flex: 1;
-            max-width: 50px;
+            max-width: 45px;
             text-align: center;
         }
 
@@ -98,20 +98,20 @@
         .progress-container { width: 100%; height: 4px; background-color: #eee; flex-shrink: 0; }
         .progress-bar { height: 100%; background-color: #81c784; width: 0%; transition: 0.3s; }
 
+        /* 3. Area Kartu Tengah - Dibatasi ketat agar tidak nindih */
         .content {
-            flex-grow: 1;
+            flex: 1;
             display: flex;
             justify-content: center;
             align-items: center;
             background: #fafafa;
-            padding: 10px;
-            min-height: 0;
+            padding: 20px;
+            overflow: hidden; /* Mencegah teks keluar area */
         }
 
         .card {
             width: 100%;
-            height: 100%;
-            max-height: 350px;
+            max-width: 280px; /* Batasi lebar maksimal */
             aspect-ratio: 1 / 1;
             background: white;
             border-radius: 24px;
@@ -120,19 +120,22 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            cursor: pointer;
+            position: relative;
         }
 
         .arabic-text {
             font-family: 'LPMQIsepMisbah', serif;
-            font-size: clamp(6rem, 30vh, 12rem);
+            font-size: 7.5rem; /* Font dikecilkan agar Alif tidak menabrak bar atas/bawah */
             color: #1b5e20;
-            line-height: 1;
+            line-height: 1.2;
+            text-align: center;
             direction: rtl;
+            user-select: none;
         }
 
+        /* 4. Navigasi Bawah - Diberi jarak aman dari tombol Home Android */
         .navigation {
-            padding: 15px 20px 25px 20px; /* Padding bawah dipertebal agar tidak kena tombol navigasi Android */
+            padding: 10px 20px 45px 20px; /* 45px di bawah agar aman dari navigasi bar */
             display: flex;
             justify-content: space-between;
             gap: 20px;
@@ -143,23 +146,19 @@
 
         button.nav-btn {
             flex: 1;
-            padding: 15px;
+            padding: 14px;
             border: none;
-            border-radius: 50px; /* Tombol bulat/oval */
+            border-radius: 50px;
             font-size: 1.5rem;
-            font-weight: bold;
             cursor: pointer;
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: 0.2s;
         }
 
         .btn-prev { background-color: #f5f5f5; color: #1b5e20; border: 2px solid #1b5e20; }
         .btn-next { background-color: #1b5e20; color: white; }
-        button:disabled { opacity: 0.2; cursor: not-allowed; }
-        
-        .arrow { font-size: 1.8rem; font-weight: 900; }
+        button:disabled { opacity: 0.2; }
     </style>
 </head>
 <body>
@@ -188,20 +187,17 @@
         </div>
 
         <div class="navigation">
-            <button class="nav-btn btn-prev" id="btnPrev" onclick="prevStep()">
-                <span class="arrow">←</span>
-            </button>
-            <button class="nav-btn btn-next" id="btnNext" onclick="nextStep()">
-                <span class="arrow">→</span>
-            </button>
+            <button class="nav-btn btn-prev" id="btnPrev" onclick="prevStep()">←</button>
+            <button class="nav-btn btn-next" id="btnNext" onclick="nextStep()">→</button>
         </div>
     </div>
 
     <script>
-        const hurufDasar = ["أ", "ب", "ت", "ث", "ج", "ح", "خ", "د", "ذ", "ر", "ز", "س", "ش", "ص", "ض", "ط", "ظ", "ع", "غ", "ف", "ق", "ك", "ل", "م", "ن", "و", "هـ", "ي"];
+        const hurufDasar = ["أ", "ب", "ت", "ث", "ج", "ح", "kh", "d", "dz", "r", "z", "s", "sy", "sh", "dh", "th", "zh", "‘a", "gh", "f", "q", "k", "l", "m", "n", "w", "h", "y"];
+        const hurufAsli = ["أ", "ب", "ت", "ث", "ج", "ح", "خ", "د", "ذ", "ر", "ز", "س", "ش", "ص", "ض", "ط", "ظ", "ع", "غ", "ف", "ق", "ك", "ل", "م", "ن", "و", "هـ", "ي"];
+        
         let dataBelajar = [];
-
-        hurufDasar.forEach((h) => {
+        hurufAsli.forEach((h) => {
             if (h === "أ") {
                 dataBelajar.push("أَ", "أً", "إِ", "إٍ", "أُ", "أٌ", "أَيْنَ");
             } else {
@@ -215,7 +211,7 @@
         const pills = document.querySelectorAll('.pill');
         const hurufGrid = document.getElementById('hurufGrid');
 
-        hurufDasar.forEach((h, i) => {
+        hurufAsli.forEach((h, i) => {
             const btn = document.createElement('div');
             btn.className = 'btn-huruf';
             btn.innerText = h;
@@ -225,20 +221,14 @@
 
         function updateUI() {
             arabicEl.innerText = dataBelajar[currentIndex];
-            
             const currentHurufIdx = Math.floor(currentIndex / 7);
-            const allBtnHuruf = document.querySelectorAll('.btn-huruf');
-            allBtnHuruf.forEach((btn, idx) => {
+            document.querySelectorAll('.btn-huruf').forEach((btn, idx) => {
                 btn.classList.toggle('active', idx === currentHurufIdx);
             });
-
-            const currentHarakatIndex = currentIndex % 7;
             pills.forEach((pill, idx) => {
-                pill.classList.toggle('active', idx === currentHarakatIndex);
+                pill.classList.toggle('active', idx === (currentIndex % 7));
             });
-
             progressBar.style.width = ((currentIndex % 7) + 1) / 7 * 100 + "%";
-
             document.getElementById('btnPrev').disabled = currentIndex === 0;
         }
 
@@ -248,10 +238,7 @@
         }
 
         function prevStep() {
-            if (currentIndex > 0) {
-                currentIndex--;
-                updateUI();
-            }
+            if (currentIndex > 0) { currentIndex--; updateUI(); }
         }
 
         function jumpToHuruf(hurufIndex) {
