@@ -8,8 +8,7 @@
         /* Memasukkan Font LPMQ Isep Misbah */
         @font-face {
             font-family: 'LPMQIsepMisbah';
-            /* Pastikan file LPMQ IsepMisbah.ttf berada di folder yang sama dengan file html ini */
-            src: url('LPMQ IsepMisbah.ttf') format('truetype');
+            src: url('LPMQ Isep Misbah.ttf') format('truetype');
         }
 
         * {
@@ -39,30 +38,69 @@
             overflow: hidden;
         }
 
-        .header {
-            background: linear-gradient(135deg, #1b5e20, #2e7d32);
-            color: white;
-            padding: 15px;
-            text-align: center;
-        }
-
-        .header h1 {
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-        }
-
-        .select-box {
-            width: 100%;
+        /* Container Tombol Huruf (Grid) */
+        .huruf-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
             padding: 10px;
-            border-radius: 8px;
-            border: none;
-            font-size: 1.2rem; /* Ukuran font menu diperbesar */
-            color: #1b5e20;
-            background-color: #ffffff;
-            font-weight: bold;
-            font-family: 'LPMQIsepMisbah', serif; /* Agar huruf di menu juga pakai font LPMQ */
-            text-align: center;
+            background: #1b5e20;
+            max-height: 180px;
+            overflow-y: auto;
+            border-bottom: 2px solid #2e7d32;
         }
+
+        .btn-huruf {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 8px 0;
+            border-radius: 8px;
+            font-family: 'LPMQIsepMisbah', serif;
+            font-size: 1.2rem;
+            cursor: pointer;
+            text-align: center;
+            transition: 0.2s;
+        }
+
+        .btn-huruf.active {
+            background: #81c784;
+            color: #1b5e20;
+            font-weight: bold;
+            border-color: white;
+        }
+
+        /* Container Tombol Harakat */
+        .harakat-pills {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            padding: 10px;
+            background: linear-gradient(135deg, #1b5e20, #2e7d32);
+        }
+
+        .pill {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            padding: 6px 8px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-family: 'LPMQIsepMisbah', serif;
+            cursor: pointer;
+            min-width: 40px;
+            text-align: center;
+            transition: 0.2s;
+        }
+
+        .pill.active {
+            background: white;
+            color: #1b5e20;
+            font-weight: bold;
+        }
+
+        .progress-container { width: 100%; height: 6px; background-color: #eee; }
+        .progress-bar { height: 100%; background-color: #81c784; width: 0%; transition: 0.3s; }
 
         .content {
             flex: 1;
@@ -87,51 +125,53 @@
             user-select: none;
         }
 
-        .card:active {
-            transform: scale(0.95);
-        }
+        .card:active { transform: scale(0.95); }
 
-        /* Menggunakan Font Khusus untuk Huruf Arab */
         .arabic-text {
             font-family: 'LPMQIsepMisbah', serif;
-            font-size: 12rem;
+            font-size: 11rem;
             color: #1b5e20;
             line-height: 1;
             padding-bottom: 20px;
+            direction: rtl;
         }
 
         .navigation {
-            padding: 25px;
+            padding: 15px;
             display: flex;
             justify-content: space-between;
             gap: 15px;
             background: white;
         }
 
-        button {
+        button.nav-btn {
             flex: 1;
-            padding: 18px;
+            padding: 16px;
             border: none;
             border-radius: 15px;
             font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
-            transition: 0.2s;
         }
 
         .btn-prev { background-color: #e0e0e0; color: #424242; }
         .btn-next { background-color: #4caf50; color: white; }
-
-        .progress-container { width: 100%; height: 8px; background-color: #eee; }
-        .progress-bar { height: 100%; background-color: #81c784; width: 0%; transition: 0.3s; }
+        button:disabled { opacity: 0.3; }
     </style>
 </head>
 <body>
 
     <div class="phone-container">
-        <div class="header">
-            <h1>Pilih Huruf Hijaiyah</h1>
-            <select class="select-box" id="hurufSelector" onchange="jumpToHuruf()"></select>
+        <div class="huruf-grid" id="hurufGrid"></div>
+
+        <div class="harakat-pills">
+            <div class="pill" onclick="jumpToHarakat(0)">َ</div>   
+            <div class="pill" onclick="jumpToHarakat(1)">ً</div>   
+            <div class="pill" onclick="jumpToHarakat(2)">ِ</div>   
+            <div class="pill" onclick="jumpToHarakat(3)">ٍ</div>   
+            <div class="pill" onclick="jumpToHarakat(4)">ُ</div>   
+            <div class="pill" onclick="jumpToHarakat(5)">ٌ</div>   
+            <div class="pill" onclick="jumpToHarakat(6)">ءَيْ</div> 
         </div>
 
         <div class="progress-container">
@@ -145,46 +185,56 @@
         </div>
 
         <div class="navigation">
-            <button class="btn-prev" id="btnPrev" onclick="prevStep()">Kembali</button>
-            <button class="btn-next" id="btnNext" onclick="nextStep()">Lanjut</button>
+            <button class="nav-btn btn-prev" id="btnPrev" onclick="prevStep()">Kembali</button>
+            <button class="nav-btn btn-next" id="btnNext" onclick="nextStep()">Lanjut</button>
         </div>
     </div>
 
     <script>
-        // Daftar 28 Huruf Dasar Hijaiyah
         const hurufDasar = ["أ", "ب", "ت", "ث", "ج", "ح", "خ", "د", "ذ", "ر", "ز", "س", "ش", "ص", "ض", "ط", "ظ", "ع", "غ", "ف", "ق", "ك", "ل", "م", "ن", "و", "هـ", "ي"];
-        
         let dataBelajar = [];
 
-        // Generate 7 tanda baca untuk setiap huruf
         hurufDasar.forEach((h) => {
             if (h === "أ") {
-                dataBelajar.push("أَ", "أً", "إِ", "إٍ", "أُ", "أٌ", "أَيْن");
+                dataBelajar.push("أَ", "أً", "إِ", "إٍ", "أُ", "أٌ", "أَيْنَ");
             } else {
-                dataBelajar.push(h + "َ", h + "ً", h + "ِ", h + "ٍ", h + "ُ", h + "ٌ", h + "َيْن");
+                dataBelajar.push(h + "َ", h + "ً", h + "ِ", h + "ٍ", h + "ُ", h + "ٌ", h + "َيْنَ");
             }
         });
 
         let currentIndex = 0;
         const arabicEl = document.getElementById('arabic');
-        const selector = document.getElementById('hurufSelector');
         const progressBar = document.getElementById('progressBar');
+        const pills = document.querySelectorAll('.pill');
+        const hurufGrid = document.getElementById('hurufGrid');
 
-        // Isi dropdown menu dengan huruf aslinya
+        // Render tombol hijaiyah ke grid
         hurufDasar.forEach((h, i) => {
-            let opt = document.createElement('option');
-            opt.value = i * 7;
-            opt.innerText = h; // Sekarang menampilkan hurufnya langsung
-            selector.appendChild(opt);
+            const btn = document.createElement('div');
+            btn.className = 'btn-huruf';
+            btn.innerText = h;
+            btn.onclick = () => jumpToHuruf(i);
+            hurufGrid.appendChild(btn);
         });
 
         function updateUI() {
             arabicEl.innerText = dataBelajar[currentIndex];
             
-            // Sinkronisasi dropdown
-            selector.value = Math.floor(currentIndex / 7) * 7;
+            // Highlight tombol Hijaiyah aktif
+            const currentHurufIdx = Math.floor(currentIndex / 7);
+            const allBtnHuruf = document.querySelectorAll('.btn-huruf');
+            allBtnHuruf.forEach((btn, idx) => {
+                if(idx === currentHurufIdx) btn.classList.add('active');
+                else btn.classList.remove('active');
+            });
 
-            // Progress bar (per 7 tanda baca)
+            // Highlight tombol harakat aktif
+            const currentHarakatIndex = currentIndex % 7;
+            pills.forEach((pill, idx) => {
+                if (idx === currentHarakatIndex) pill.classList.add('active');
+                else pill.classList.remove('active');
+            });
+
             let step = (currentIndex % 7) + 1;
             progressBar.style.width = (step / 7) * 100 + "%";
 
@@ -202,8 +252,14 @@
             updateUI();
         }
 
-        function jumpToHuruf() {
-            currentIndex = parseInt(selector.value);
+        function jumpToHuruf(hurufIndex) {
+            currentIndex = hurufIndex * 7;
+            updateUI();
+        }
+
+        function jumpToHarakat(harakatIndex) {
+            const currentHurufStart = Math.floor(currentIndex / 7) * 7;
+            currentIndex = currentHurufStart + harakatIndex;
             updateUI();
         }
 
