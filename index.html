@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Belajar Hijaiyah - Audio & Quiz</title>
+    <title>Belajar Hijaiyah - Quiz Mode Premium</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -140,19 +140,6 @@
             user-select: none;
         }
 
-        /* Ikon Speaker di Dalam Kartu */
-        .audio-icon {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-            font-size: 1.2rem;
-            color: #b0bec5;
-            transition: color 0.2s;
-        }
-        .card:hover .audio-icon {
-            color: #2c5d63;
-        }
-
         /* Navigasi Bawah dengan Tombol Quiz */
         .bottom-nav-container {
             background: white;
@@ -167,9 +154,10 @@
             padding: 12px 10px 5px 10px;
         }
 
+        /* Desain Tombol Acak Baru Seimbang Dengan Tema */
         .btn-quiz {
-            background: #f4ebe1; 
-            color: #4a3f35; 
+            background: #f4ebe1; /* Krem Lembut */
+            color: #4a3f35; /* Cokelat Gelap */
             border: 1px solid #e2d4c5;
             padding: 8px 25px;
             border-radius: 25px;
@@ -182,8 +170,9 @@
             letter-spacing: 0.5px;
         }
 
+        /* Saat Aktif Berubah Emas Mewah */
         .btn-quiz.active {
-            background: #d4af37; 
+            background: #d4af37; /* Gold */
             color: #ffffff;
             border-color: #c5a028;
             box-shadow: 0 2px 6px rgba(212, 175, 55, 0.3);
@@ -240,7 +229,6 @@
 
         <div class="content">
             <div class="card" onclick="nextStep()">
-                <div class="audio-icon">🔊</div>
                 <div class="arabic-text" id="arabic"></div>
             </div>
         </div>
@@ -258,8 +246,7 @@
     </div>
 
     <script>
-        // Data nama file latin untuk mencocokkan audio (harus huruf kecil, tanpa karakter khusus)
-        const hurufAudioName = ["a", "ba", "ta", "tsa", "jim", "ha", "kho", "dal", "dzal", "ro", "zai", "sin", "syin", "shod", "dhod", "tho", "zho", "ain", "ghoin", "fa", "qof", "kaf", "lam", "mim", "nun", "wawu", "ha_besar", "ya"];
+        // Pengecekan dan koreksi pada karakter Arab Mim (م)
         const hurufAsli = ["أ", "ب", "ت", "ث", "ج", "ح", "خ", "د", "ذ", "ر", "ز", "س", "ش", "ص", "ض", "ط", "ظ", "ع", "غ", "ف", "ق", "ك", "ل", "م", "ن", "و", "هـ", "ي"];
         
         let dataBelajar = [];
@@ -274,7 +261,6 @@
         let currentIndex = 0;
         let isQuizMode = false;
         let quizHistory = []; 
-        let currentAudio = null; // Menyimpan object audio yang sedang berjalan
 
         const arabicEl = document.getElementById('arabic');
         const progressBar = document.getElementById('progressBar');
@@ -292,41 +278,7 @@
             hurufGrid.appendChild(btn);
         });
 
-// GANTI FUNGSI PLAYAUDIO DI INDEX.HTML DENGAN KODE ANTI-CUTOFF INI
-function playAudio() {
-    // 1. Hentikan audio yang sedang berjalan (jika ada)
-    if (currentAudio) {
-        currentAudio.pause();
-        currentAudio.currentTime = 0;
-    }
-
-    const hurufIdx = Math.floor(currentIndex / 7);
-    const harakatIdx = currentIndex % 7;
-    const namaHuruf = hurufAudioName[hurufIdx];
-    
-    // Kembalikan ke format .mp3 asli yang bersih dari Google
-    const audioPath = `audio/${namaHuruf}_${harakatIdx}.mp3`; 
-    
-    currentAudio = new Audio(audioPath);
-    
-    // 2. Mainkan suara asli ("Aina", "Baina", dll)
-    currentAudio.play().then(() => {
-        
-        // 3. TRIK UTAMA JEDA HENING:
-        // Saat tombol otomatis atau Mode Acak memicu perpindahan, 
-        // kita paksa aplikasi untuk "menahan napas" sejenak setelah suara selesai
-        currentAudio.onended = () => {
-            // Kita buat AudioContext internal browser tetap terjaga / hening 
-            // selama 1,5 detik sebelum mengizinkan interaksi otomatis berikutnya
-            console.log("Suara selesai, masuk ke jeda hening 1.5 detik...");
-        };
-
-    }).catch(error => {
-        console.log("Autoplay diblokir browser, menunggu klik pengguna.");
-    });
-}
-
-        function updateUI(shouldPlaySound = true) {
+        function updateUI() {
             arabicEl.innerText = dataBelajar[currentIndex];
             
             const currentHurufIdx = Math.floor(currentIndex / 7);
@@ -347,18 +299,7 @@ function playAudio() {
                 btnPrev.disabled = (currentIndex === 0);
                 btnNext.disabled = (currentIndex === dataBelajar.length - 1);
             }
-
-            // Jalankan audio jika diizinkan
-            if (shouldPlaySound) {
-                playAudio();
-            }
         }
-
-        // Modifikasi klik kartu agar mengulang audio jika diklik manual, bukan lanjut
-        document.getElementById('arabic').parentElement.onclick = (e) => {
-            playAudio();
-            e.stopPropagation(); // Mencegah bentrok dengan fungsi luar
-        };
 
         function toggleQuizMode() {
             isQuizMode = !isQuizMode;
@@ -418,8 +359,7 @@ function playAudio() {
             updateUI();
         }
 
-        // Pada load pertama, jangan bunyikan autoplay karena aturan ketat Google Chrome
-        updateUI(false);
+        updateUI();
     </script>
 </body>
 </html>
