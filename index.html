@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Belajar Hijaiyah</title>
+    <title>Belajar Hijaiyah - Quiz Mode Premium</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#1b5e20">
+    <meta name="theme-color" content="#2c5d63">
 
     <style>
         @font-face {
@@ -25,7 +25,7 @@
         }
 
         body {
-            background-color: #1b5e20;
+            background-color: #2c5d63;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -43,17 +43,18 @@
             flex-direction: column;
         }
 
+        /* Grid Huruf Hijaiyah */
         .huruf-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             gap: 2px;
             padding: 4px;
-            background: #1b5e20;
+            background: #2c5d63;
             flex-shrink: 0;
         }
 
         .btn-huruf {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.12);
             color: white;
             border: 1px solid rgba(255, 255, 255, 0.1);
             padding: 4px 0;
@@ -65,25 +66,25 @@
         }
 
         .btn-huruf.active {
-            background: #81c784;
-            color: #1b5e20;
+            background: #a8dadc;
+            color: #2c5d63;
             font-weight: bold;
         }
 
+        /* Tombol Harakat */
         .harakat-pills {
             display: flex;
             justify-content: center;
             gap: 4px;
-            padding: 8px;
-            background: linear-gradient(135deg, #1b5e20, #2e7d32);
+            padding: 10px 8px;
+            background: linear-gradient(135deg, #2c5d63, #1f4044);
             flex-shrink: 0;
-            z-index: 10;
         }
 
         .pill {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.15);
             color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             padding: 6px 0;
             border-radius: 8px;
             font-size: 0.9rem;
@@ -91,24 +92,26 @@
             flex: 1;
             max-width: 45px;
             text-align: center;
+            cursor: pointer;
         }
 
         .pill.active {
-            background: white;
-            color: #1b5e20;
+            background: #ffffff;
+            color: #2c5d63;
             font-weight: bold;
         }
 
         .progress-container { width: 100%; height: 4px; background-color: #eee; flex-shrink: 0; }
-        .progress-bar { height: 100%; background-color: #81c784; width: 0%; transition: 0.3s; }
+        .progress-bar { height: 100%; background-color: #a8dadc; width: 0%; transition: 0.3s; }
 
+        /* Area Kartu Tengah */
         .content {
             flex: 1;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: #fafafa;
-            padding: 20px;
+            background: #f7f9fa;
+            padding: 15px;
             overflow: hidden;
         }
 
@@ -118,32 +121,68 @@
             aspect-ratio: 1 / 1;
             background: white;
             border-radius: 24px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            border: 1px solid #eee;
+            box-shadow: 0 6px 20px rgba(44, 93, 99, 0.08);
+            border: 1px solid #eef2f3;
             display: flex;
             justify-content: center;
             align-items: center;
             position: relative;
+            cursor: pointer;
         }
 
         .arabic-text {
             font-family: 'LPMQIsepMisbah', serif;
             font-size: 7.5rem;
-            color: #1b5e20;
+            color: #2c5d63;
             line-height: 1.2;
             text-align: center;
             direction: rtl;
             user-select: none;
         }
 
+        /* Navigasi Bawah dengan Tombol Quiz */
+        .bottom-nav-container {
+            background: white;
+            flex-shrink: 0;
+            border-top: 1px solid #f1f3f4;
+            padding-bottom: 45px;
+        }
+
+        .quiz-bar {
+            display: flex;
+            justify-content: center;
+            padding: 12px 10px 5px 10px;
+        }
+
+        /* Desain Tombol Acak Baru Seimbang Dengan Tema */
+        .btn-quiz {
+            background: #f4ebe1; /* Krem Lembut */
+            color: #4a3f35; /* Cokelat Gelap */
+            border: 1px solid #e2d4c5;
+            padding: 8px 25px;
+            border-radius: 25px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Saat Aktif Berubah Emas Mewah */
+        .btn-quiz.active {
+            background: #d4af37; /* Gold */
+            color: #ffffff;
+            border-color: #c5a028;
+            box-shadow: 0 2px 6px rgba(212, 175, 55, 0.3);
+        }
+
         .navigation {
-            padding: 10px 20px 45px 20px;
+            padding: 5px 20px 10px 20px;
             display: flex;
             justify-content: space-between;
             gap: 20px;
-            background: white;
-            flex-shrink: 0;
-            border-top: 1px solid #eee;
         }
 
         button.nav-btn {
@@ -159,8 +198,8 @@
             transition: 0.2s;
         }
 
-        .btn-prev { background-color: #1b5e20; color: white; }
-        .btn-next { background-color: #1b5e20; color: white; }
+        .btn-prev { background-color: #2c5d63; color: white; }
+        .btn-next { background-color: #2c5d63; color: white; }
         
         button:disabled { 
             opacity: 0.15; 
@@ -194,13 +233,20 @@
             </div>
         </div>
 
-        <div class="navigation">
-            <button class="nav-btn btn-prev" id="btnPrev" onclick="prevStep()">←</button>
-            <button class="nav-btn btn-next" id="btnNext" onclick="nextStep()">→</button>
+        <div class="bottom-nav-container">
+            <div class="quiz-bar">
+                <button class="btn-quiz" id="btnQuiz" onclick="toggleQuizMode()">Mode Acak: MATI</button>
+            </div>
+            
+            <div class="navigation">
+                <button class="nav-btn btn-prev" id="btnPrev" onclick="prevStep()">←</button>
+                <button class="nav-btn btn-next" id="btnNext" onclick="nextStep()">→</button>
+            </div>
         </div>
     </div>
 
     <script>
+        // Pengecekan dan koreksi pada karakter Arab Mim (م)
         const hurufAsli = ["أ", "ب", "ت", "ث", "ج", "ح", "خ", "د", "ذ", "ر", "ز", "س", "ش", "ص", "ض", "ط", "ظ", "ع", "غ", "ف", "ق", "ك", "ل", "م", "ن", "و", "هـ", "ي"];
         
         let dataBelajar = [];
@@ -213,12 +259,16 @@
         });
 
         let currentIndex = 0;
+        let isQuizMode = false;
+        let quizHistory = []; 
+
         const arabicEl = document.getElementById('arabic');
         const progressBar = document.getElementById('progressBar');
         const pills = document.querySelectorAll('.pill');
         const hurufGrid = document.getElementById('hurufGrid');
         const btnPrev = document.getElementById('btnPrev');
         const btnNext = document.getElementById('btnNext');
+        const btnQuiz = document.getElementById('btnQuiz');
 
         hurufAsli.forEach((h, i) => {
             const btn = document.createElement('div');
@@ -230,40 +280,82 @@
 
         function updateUI() {
             arabicEl.innerText = dataBelajar[currentIndex];
+            
             const currentHurufIdx = Math.floor(currentIndex / 7);
             document.querySelectorAll('.btn-huruf').forEach((btn, idx) => {
                 btn.classList.toggle('active', idx === currentHurufIdx);
             });
+
             pills.forEach((pill, idx) => {
                 pill.classList.toggle('active', idx === (currentIndex % 7));
             });
+
             progressBar.style.width = ((currentIndex % 7) + 1) / 7 * 100 + "%";
-            btnPrev.disabled = (currentIndex === 0);
-            btnNext.disabled = (currentIndex === dataBelajar.length - 1);
+
+            if (isQuizMode) {
+                btnPrev.disabled = (quizHistory.length <= 1);
+                btnNext.disabled = false; 
+            } else {
+                btnPrev.disabled = (currentIndex === 0);
+                btnNext.disabled = (currentIndex === dataBelajar.length - 1);
+            }
         }
 
-        function nextStep() {
-            if (currentIndex < dataBelajar.length - 1) {
-                currentIndex++;
+        function toggleQuizMode() {
+            isQuizMode = !isQuizMode;
+            quizHistory = [];
+            
+            if (isQuizMode) {
+                btnQuiz.innerText = "Mode Acak: AKTIF";
+                btnQuiz.classList.add('active');
+                quizHistory.push(currentIndex);
+                nextStep();
+            } else {
+                btnQuiz.innerText = "Mode Acak: MATI";
+                btnQuiz.classList.remove('active');
                 updateUI();
             }
         }
 
-        function prevStep() {
-            if (currentIndex > 0) {
-                currentIndex--;
+        function nextStep() {
+            if (isQuizMode) {
+                const randomIndex = Math.floor(Math.random() * dataBelajar.length);
+                currentIndex = randomIndex;
+                quizHistory.push(currentIndex);
                 updateUI();
+            } else {
+                if (currentIndex < dataBelajar.length - 1) {
+                    currentIndex++;
+                    updateUI();
+                }
+            }
+        }
+
+        function prevStep() {
+            if (isQuizMode) {
+                if (quizHistory.length > 1) {
+                    quizHistory.pop(); 
+                    currentIndex = quizHistory[quizHistory.length - 1]; 
+                    updateUI();
+                }
+            } else {
+                if (currentIndex > 0) {
+                    currentIndex--;
+                    updateUI();
+                }
             }
         }
 
         function jumpToHuruf(hurufIndex) {
             const currentHarakatIndex = currentIndex % 7;
             currentIndex = (hurufIndex * 7) + currentHarakatIndex;
+            if (isQuizMode) quizHistory.push(currentIndex);
             updateUI();
         }
 
         function jumpToHarakat(harakatIndex) {
             currentIndex = (Math.floor(currentIndex / 7) * 7) + harakatIndex;
+            if (isQuizMode) quizHistory.push(currentIndex);
             updateUI();
         }
 
