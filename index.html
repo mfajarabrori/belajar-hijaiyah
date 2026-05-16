@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Belajar Hijaiyah - LPMQ Font</title>
+    <style>
+        /* Memasukkan Font LPMQ Isep Misbah */
+        @font-face {
+            font-family: 'LPMQIsepMisbah';
+            /* Pastikan file LPMQ IsepMisbah.ttf berada di folder yang sama dengan file html ini */
+            src: url('LPMQ IsepMisbah.ttf') format('truetype');
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .phone-container {
+            width: 100%;
+            max-width: 412px;
+            height: 100vh;
+            max-height: 846px;
+            background-color: #ffffff;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1b5e20, #2e7d32);
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        .select-box {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            font-size: 1.2rem; /* Ukuran font menu diperbesar */
+            color: #1b5e20;
+            background-color: #ffffff;
+            font-weight: bold;
+            font-family: 'LPMQIsepMisbah', serif; /* Agar huruf di menu juga pakai font LPMQ */
+            text-align: center;
+        }
+
+        .content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #fafafa;
+        }
+
+        .card {
+            width: 80%;
+            aspect-ratio: 1 / 1;
+            background: white;
+            border-radius: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            border: 1px solid #eee;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.1s;
+            user-select: none;
+        }
+
+        .card:active {
+            transform: scale(0.95);
+        }
+
+        /* Menggunakan Font Khusus untuk Huruf Arab */
+        .arabic-text {
+            font-family: 'LPMQIsepMisbah', serif;
+            font-size: 12rem;
+            color: #1b5e20;
+            line-height: 1;
+            padding-bottom: 20px;
+        }
+
+        .navigation {
+            padding: 25px;
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            background: white;
+        }
+
+        button {
+            flex: 1;
+            padding: 18px;
+            border: none;
+            border-radius: 15px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-prev { background-color: #e0e0e0; color: #424242; }
+        .btn-next { background-color: #4caf50; color: white; }
+
+        .progress-container { width: 100%; height: 8px; background-color: #eee; }
+        .progress-bar { height: 100%; background-color: #81c784; width: 0%; transition: 0.3s; }
+    </style>
+</head>
+<body>
+
+    <div class="phone-container">
+        <div class="header">
+            <h1>Pilih Huruf Hijaiyah</h1>
+            <select class="select-box" id="hurufSelector" onchange="jumpToHuruf()"></select>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <div class="content">
+            <div class="card" onclick="nextStep()">
+                <div class="arabic-text" id="arabic"></div>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <button class="btn-prev" id="btnPrev" onclick="prevStep()">Kembali</button>
+            <button class="btn-next" id="btnNext" onclick="nextStep()">Lanjut</button>
+        </div>
+    </div>
+
+    <script>
+        // Daftar 28 Huruf Dasar Hijaiyah
+        const hurufDasar = ["أ", "ب", "ت", "ث", "ج", "ح", "خ", "د", "ذ", "ر", "ز", "س", "ش", "ص", "ض", "ط", "ظ", "ع", "غ", "ف", "ق", "ك", "ل", "م", "ن", "و", "هـ", "ي"];
+        
+        let dataBelajar = [];
+
+        // Generate 7 tanda baca untuk setiap huruf
+        hurufDasar.forEach((h) => {
+            if (h === "أ") {
+                dataBelajar.push("أَ", "أً", "إِ", "إٍ", "أُ", "أٌ", "أَيْن");
+            } else {
+                dataBelajar.push(h + "َ", h + "ً", h + "ِ", h + "ٍ", h + "ُ", h + "ٌ", h + "َيْن");
+            }
+        });
+
+        let currentIndex = 0;
+        const arabicEl = document.getElementById('arabic');
+        const selector = document.getElementById('hurufSelector');
+        const progressBar = document.getElementById('progressBar');
+
+        // Isi dropdown menu dengan huruf aslinya
+        hurufDasar.forEach((h, i) => {
+            let opt = document.createElement('option');
+            opt.value = i * 7;
+            opt.innerText = h; // Sekarang menampilkan hurufnya langsung
+            selector.appendChild(opt);
+        });
+
+        function updateUI() {
+            arabicEl.innerText = dataBelajar[currentIndex];
+            
+            // Sinkronisasi dropdown
+            selector.value = Math.floor(currentIndex / 7) * 7;
+
+            // Progress bar (per 7 tanda baca)
+            let step = (currentIndex % 7) + 1;
+            progressBar.style.width = (step / 7) * 100 + "%";
+
+            document.getElementById('btnPrev').disabled = currentIndex === 0;
+            document.getElementById('btnNext').innerText = currentIndex === dataBelajar.length - 1 ? "Ulangi" : "Lanjut";
+        }
+
+        function nextStep() {
+            currentIndex = (currentIndex < dataBelajar.length - 1) ? currentIndex + 1 : 0;
+            updateUI();
+        }
+
+        function prevStep() {
+            if (currentIndex > 0) currentIndex--;
+            updateUI();
+        }
+
+        function jumpToHuruf() {
+            currentIndex = parseInt(selector.value);
+            updateUI();
+        }
+
+        updateUI();
+    </script>
+</body>
+</html>
