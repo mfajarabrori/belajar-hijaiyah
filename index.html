@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Belajar Hijaiyah - Layout Fix</title>
+    <title>Belajar Hijaiyah - Final Logic</title>
     <style>
         @font-face {
             font-family: 'LPMQIsepMisbah';
@@ -37,7 +37,6 @@
             flex-direction: column;
         }
 
-        /* 1. Header Grid Hijaiyah - Dibuat lebih ringkas */
         .huruf-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
@@ -65,7 +64,6 @@
             font-weight: bold;
         }
 
-        /* 2. Tombol Harakat */
         .harakat-pills {
             display: flex;
             justify-content: center;
@@ -73,7 +71,7 @@
             padding: 8px;
             background: linear-gradient(135deg, #1b5e20, #2e7d32);
             flex-shrink: 0;
-            z-index: 10; /* Biar tetap di atas kalau ada teks lewat */
+            z-index: 10;
         }
 
         .pill {
@@ -98,7 +96,6 @@
         .progress-container { width: 100%; height: 4px; background-color: #eee; flex-shrink: 0; }
         .progress-bar { height: 100%; background-color: #81c784; width: 0%; transition: 0.3s; }
 
-        /* 3. Area Kartu Tengah - Dibatasi ketat agar tidak nindih */
         .content {
             flex: 1;
             display: flex;
@@ -106,12 +103,12 @@
             align-items: center;
             background: #fafafa;
             padding: 20px;
-            overflow: hidden; /* Mencegah teks keluar area */
+            overflow: hidden;
         }
 
         .card {
             width: 100%;
-            max-width: 280px; /* Batasi lebar maksimal */
+            max-width: 280px;
             aspect-ratio: 1 / 1;
             background: white;
             border-radius: 24px;
@@ -125,7 +122,7 @@
 
         .arabic-text {
             font-family: 'LPMQIsepMisbah', serif;
-            font-size: 7.5rem; /* Font dikecilkan agar Alif tidak menabrak bar atas/bawah */
+            font-size: 7.5rem;
             color: #1b5e20;
             line-height: 1.2;
             text-align: center;
@@ -133,9 +130,8 @@
             user-select: none;
         }
 
-        /* 4. Navigasi Bawah - Diberi jarak aman dari tombol Home Android */
         .navigation {
-            padding: 10px 20px 45px 20px; /* 45px di bawah agar aman dari navigasi bar */
+            padding: 10px 20px 45px 20px;
             display: flex;
             justify-content: space-between;
             gap: 20px;
@@ -154,11 +150,18 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            transition: 0.2s;
         }
 
         .btn-prev { background-color: #1b5e20; color: white; }
         .btn-next { background-color: #1b5e20; color: white; }
-        button:disabled { opacity: 0.2; }
+        
+        /* Gaya tombol saat disable */
+        button:disabled { 
+            opacity: 0.15; 
+            cursor: not-allowed;
+            filter: grayscale(1);
+        }
     </style>
 </head>
 <body>
@@ -193,7 +196,6 @@
     </div>
 
     <script>
-        const hurufDasar = ["أ", "ب", "ت", "ث", "ج", "ح", "kh", "d", "dz", "r", "z", "s", "sy", "sh", "dh", "th", "zh", "‘a", "gh", "f", "q", "k", "l", "m", "n", "w", "h", "y"];
         const hurufAsli = ["أ", "ب", "ت", "ث", "ج", "ح", "خ", "د", "ذ", "ر", "ز", "س", "ش", "ص", "ض", "ط", "ظ", "ع", "غ", "ف", "ق", "ك", "ل", "م", "ن", "و", "هـ", "ي"];
         
         let dataBelajar = [];
@@ -210,6 +212,8 @@
         const progressBar = document.getElementById('progressBar');
         const pills = document.querySelectorAll('.pill');
         const hurufGrid = document.getElementById('hurufGrid');
+        const btnPrev = document.getElementById('btnPrev');
+        const btnNext = document.getElementById('btnNext');
 
         hurufAsli.forEach((h, i) => {
             const btn = document.createElement('div');
@@ -221,28 +225,46 @@
 
         function updateUI() {
             arabicEl.innerText = dataBelajar[currentIndex];
+            
+            // Highlight Hijaiyah
             const currentHurufIdx = Math.floor(currentIndex / 7);
             document.querySelectorAll('.btn-huruf').forEach((btn, idx) => {
                 btn.classList.toggle('active', idx === currentHurufIdx);
             });
+
+            // Highlight Harakat
             pills.forEach((pill, idx) => {
                 pill.classList.toggle('active', idx === (currentIndex % 7));
             });
+
+            // Progress Bar
             progressBar.style.width = ((currentIndex % 7) + 1) / 7 * 100 + "%";
-            document.getElementById('btnPrev').disabled = currentIndex === 0;
+
+            // LOGIKA DISABLE TOMBOL
+            // Matikan tombol Kiri jika di huruf pertama (Alif) & harakat pertama (a)
+            btnPrev.disabled = (currentIndex === 0);
+            
+            // Matikan tombol Kanan jika di huruf terakhir (Ya) & harakat terakhir (aina)
+            btnNext.disabled = (currentIndex === dataBelajar.length - 1);
         }
 
         function nextStep() {
-            currentIndex = (currentIndex < dataBelajar.length - 1) ? currentIndex + 1 : 0;
-            updateUI();
+            if (currentIndex < dataBelajar.length - 1) {
+                currentIndex++;
+                updateUI();
+            }
         }
 
         function prevStep() {
-            if (currentIndex > 0) { currentIndex--; updateUI(); }
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateUI();
+            }
         }
 
         function jumpToHuruf(hurufIndex) {
-            currentIndex = hurufIndex * 7;
+            const currentHarakatIndex = currentIndex % 7;
+            currentIndex = (hurufIndex * 7) + currentHarakatIndex;
             updateUI();
         }
 
